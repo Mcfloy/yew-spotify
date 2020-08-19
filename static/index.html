@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Yew Spotify</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="script.js"></script>
+  <!-- We will insert our code here. -->
+  <script type="module">
+    import init from "./wasm.js"
+    
+    (async _ => {
+      // First initialize the yew application (it removes everything from the body unfortunately)
+      await init()
+      
+      // Then initialize the spotify player (will add things in the body)
+      const scriptNode = document.createElement('script');
+      scriptNode.src = "https://sdk.scdn.co/spotify-player.js";
+      document.body.append(scriptNode);
+    })();
+
+    window.onSpotifyWebPlaybackSDKReady = async () => {
+      if (window.location.search) {
+        const code = getCode(window.location.search);
+        console.log(window.location.search);
+        console.log(code);
+        // window.history.pushState({}, 'Spotify Web Playback SDK Player', 'http://127.0.0.1:8887');
+        await getAccessAndRefreshTokens(code);
+      }
+      await checkStoredAuthToken();
+      const token = localStorage.getItem('access_token');
+
+      const player_cover = document.getElementById('player_cover');
+      const player_song_name = document.getElementById('player_song_name');
+      const player_artist = document.getElementById('player_artist');
+      const player_progression = document.getElementById('player_progression');
+
+      // const token = 'BQDQUImQmePNy-67812gPhBIckq6f1XoC3cxMI_ZlVTJ00MfcPx-0FaLyIv8cESkzHChaKkLK29qO9k6m4dhGk5PyNyL9REJCowRhQMmM7VP_TcQdBkXLqSODavJDTiBCEtYmMj8uT_rpD9Ylfl8Y5mpip12AwvSeTkkdDyMOK8LfoZV1FHkwq5V-HxgWZdmMj5vOCxUDbgK-Ghlv8M';
+      // console.log('token', token);
+      if (!token) {
+        redirectToAuthUrl();
+        return;
+      }
+
+      const player = new Spotify.Player({
+        name: 'Web Playback SDK Quick Start Player',
+        getOAuthToken: cb => { cb(token); }
+      });
+
+      // Error handling
+      player.addListener('initialization_error', ({ message }) => { console.error('init error: ' + message); });
+      player.addListener('authentication_error', ({ message }) => {
+        console.error('authentication error:' + message);
+        clearCookies();
+        window.location = window.location;
+      });
+      player.addListener('account_error', ({ message }) => { console.error('account error:' + message); });
+      player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+
+      let playerSongPosition = undefined;
+      let playerSongDuration = undefined;
+      let playTimeEventHandler = () => {
+        // if (eventHandlerInitialized === false) {
+        //   return;
+        // }
+        player_progression.innerText = parseTimeToString(playerSongPosition) + ' - ' + parseTimeToString(playerSongDuration);
+        playerSongPosition += 200;
+        console.log(playerSongPosition);
+        console.log(playerSongDuration);
+      };
+
+      let intervalNumberInstance;
+
+      // Weird way to prevent Spotify to spam events on the position of the song.
+      let antiSpamTimeStamp = Date.now();
+
+      // Playback status updates
+      player.addListener('player_state_changed', ({
+        position,
+        duration,
+        paused,
+        track_window: { current_track }
+      }) => {
+        if (Date.now() - antiSpamTimeStamp < 200) {
+          return;
+        } else {
+          antiSpamTimeStamp = Date.now();
+        }
+
+        console.log('Currently Playing', current_track);
+        console.log('Position in Song', position);
+        console.log('Duration of Song', duration);
+        console.log('Paused', paused);
+
+        player_cover.src = current_track.album.images[1].url;
+        player_artist.innerText = current_track.artists.map(artist => artist.name).join(', ');
+        player_song_name.innerText = current_track.name;
+
+        playerSongPosition = position;
+        playerSongDuration = duration;
+        player_progression.innerText = parseTimeToString(position) + ' - ' + parseTimeToString(duration);
+        if (paused === false && !intervalNumberInstance) {
+          console.log('create play time event handler');
+          intervalNumberInstance = setInterval(playTimeEventHandler, 200);
+        } else if (paused === true && intervalNumberInstance) {
+          console.log('clearing the play time event handler');
+          clearInterval(intervalNumberInstance);
+          intervalNumberInstance = null;
+        }
+      });
+
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+
+        const play = ({
+          spotify_uri,
+          playerInstance: {
+            _options: {
+              getOAuthToken,
+              id
+            }
+          }
+        }) => {
+          getOAuthToken(access_token => {
+            fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
+              method: 'PUT',
+              body: JSON.stringify({ uris: [spotify_uri] }),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+              },
+            });
+          });
+        };
+
+        play({
+          playerInstance: player,
+          spotify_uri: 'spotify:track:35WLGytCEIVPLBPfhNPhTp',
+        });
+      });
+
+      // Not Ready
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      // Connect to the player!
+      player.connect();
+
+
+    };
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>
