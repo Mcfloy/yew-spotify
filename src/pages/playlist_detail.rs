@@ -5,7 +5,6 @@ use yew::services::fetch::FetchTask;
 use crate::api;
 use crate::api::FetchResponse;
 use yew::format::Json;
-use chrono::DateTime;
 
 struct State {
     playlist: Option<PlaylistFull>,
@@ -91,12 +90,19 @@ impl Component for PlaylistDetail {
                 .iter()
                 .map(|ref playlist_track| {
                     let track = &playlist_track.track;
+                    let artists: String = track.artists
+                        .iter()
+                        .map(|a| a.name.clone())
+                        .collect::<Vec<String>>()
+                        .join(", ");
                     html! {
                         <tr>
                             <td>{&track.name}</td>
-                            <td>{&track.duration_ms}</td>
+                            <td>{artists}</td>
+                            <td>{&track.album.name}</td>
+                            <td>{&playlist_track.added_at.unwrap().format("%F")}</td>
                             <td>{&track.popularity}</td>
-                            <td>{format!("{:?}", &playlist_track.added_at.unwrap())}</td>
+                            <td>{&track.duration_ms}</td>
                         </tr>
                     }
                 })

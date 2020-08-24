@@ -2,6 +2,8 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use crate::types::user::PublicUser;
 use crate::types::ExternalUrl;
+use crate::types::album::SimplifiedAlbum;
+use crate::types::artist::SimplifiedArtist;
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct PlaylistTrack<T> {
@@ -13,8 +15,8 @@ pub struct PlaylistTrack<T> {
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Track {
-    // pub album: SimplifiedAlbum,
-    // pub artists: Vec<SimplifiedArtist>,
+    pub album: SimplifiedAlbum,
+    pub artists: Vec<SimplifiedArtist>,
     pub available_markets: Vec<String>,
     pub disc_number: i32,
     pub duration_ms: i32,

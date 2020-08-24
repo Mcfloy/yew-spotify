@@ -1,3 +1,4 @@
+mod artist;
 mod album;
 mod track;
 mod followers;
