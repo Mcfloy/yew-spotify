@@ -1,3 +1,9 @@
+:root {
+    --banner_top_height: 50px;
+    --banner_bottom_height: 70px;
+    --banner_left_width: 260px;
+}
+
 body {
     margin: 0;
     font-size: 0;
@@ -16,13 +22,48 @@ main {
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 70px;
+    height: var(--banner_bottom_height);
     background-color: #333;
+}
+
+#banner_left {
+    width: var(--banner_left_width);
+    height: calc(100% - var(--banner_bottom_height));
+    margin: 0;
+    display: inline-block;
+    font-size: 16px;
+    background-color: #1f1f1f;
+}
+
+#banner_left > a {
+    font-size: 18px;
+    font-weight: bold;
+    height: var(--banner_top_height);
+    line-height: var(--banner_top_height);
+    display: inline-block;
+}
+
+#banner_left div:not(:last-of-type) {
+    margin-bottom: 20px;
+}
+
+#banner_left div > h3 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #AAA;
+    margin: 0 20px 5px 20px;
+    letter-spacing: 1px;
 }
 
 #player_infos {
     position: relative;
     height: 70px;
+}
+
+.overflow-handler {
+    height: 100%;
+    overflow-y: auto;
 }
 
 #player_cover {
@@ -54,4 +95,70 @@ main {
     right: 0;
     font-size: 14px;
     text-align: center;
+}
+
+#my_playlists {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: calc(100% - var(--banner_top_height));
+}
+
+a {
+    color: #efefef;
+    text-decoration: none;
+}
+
+#my_playlists li {
+    padding: 0 20px;
+    font-weight: 700;
+    font-size: 14px;
+    height: 28px;
+    line-height: 28px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #BBB;
+}
+
+#my_playlists li:hover {
+    /* background-color: rgba(0,0,0,0.3); */
+    cursor: pointer;
+    color: #efefef;
+}
+
+#banner_top {
+    background-color: rgba(0,0,0,0.4);
+    width: calc(100% - var(--banner_left_width));
+    height: var(--banner_top_height);
+    margin-left: var(--banner_left_width);
+    position: absolute;
+}
+
+#current_user_information {
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 30px;
+}
+
+#search_bar {
+    border: none;
+    margin: 12px 0 12px 20px;
+    padding: 5px 5px 5px 10px;
+    border-radius: 12px;
+}
+
+#search_bar:hover, #search_bar:focus {
+    outline: none;
+}
+
+#container {
+    position: absolute;
+    top: var(--banner_top_height);
+    left: var(--banner_left_width);
+    width: calc(100% - var(--banner_left_width));
+    height: calc(100% - var(--banner_top_height) - var(--banner_bottom_height));
+    font-size: 16px;
 }

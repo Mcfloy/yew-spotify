@@ -36,9 +36,29 @@ function clearCookies() {
 }
 
 const clientId = '3fb93fa750654c4b8ae3a309c343b8d3';
-const authorizationheader = 'Basic M2ZiOTNmYTc1MDY1NGM0YjhhZTNhMzA5YzM0M2I4ZDM6OWM5MjBhOTg4ZWViNGRiNTk1YmY2ODFjZTc0YjI5NmQ=';
+const authorizationHeader = 'Basic M2ZiOTNmYTc1MDY1NGM0YjhhZTNhMzA5YzM0M2I4ZDM6OWM5MjBhOTg4ZWViNGRiNTk1YmY2ODFjZTc0YjI5NmQ=';
 
-const authorizationCodeUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A8887&scope=streaming%20user-read-private%20user-read-email`;
+const scopes = [
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'user-read-currently-playing',
+  'streaming',
+  'app-remote-control',
+  'user-read-email',
+  'user-read-private',
+  'playlist-read-collaborative',
+  'playlist-modify-public',
+  'playlist-read-private',
+  'playlist-modify-private',
+  'user-library-modify',
+  'user-library-read',
+  'user-top-read',
+  'user-read-playback-position',
+  'user-read-recently-played',
+  'user-follow-read',
+  'user-follow-modify'
+];
+const authorizationCodeUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A8887&scope=${scopes.join('%20')}`;
 const accessTokenUrl = `https://accounts.spotify.com/api/token`;
 
 async function getAccessAndRefreshTokens(code) {
@@ -50,7 +70,7 @@ async function getAccessAndRefreshTokens(code) {
   const response = await fetch(accessTokenUrl, {
     method: 'POST',
     headers: {
-      'Authorization': authorizationheader,
+      'Authorization': authorizationHeader,
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     body: new URLSearchParams(formData)
@@ -75,7 +95,7 @@ async function refreshToken() {
   const response = await fetch(accessTokenUrl, {
     method: 'POST',
     headers: {
-      'Authorization': authorizationheader,
+      'Authorization': authorizationHeader,
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     body: new URLSearchParams(formData)

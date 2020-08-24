@@ -10,16 +10,6 @@
     import init from "./wasm.js"
     
     (async _ => {
-      // First initialize the yew application (it removes everything from the body unfortunately)
-      await init()
-      
-      // Then initialize the spotify player (will add things in the body)
-      const scriptNode = document.createElement('script');
-      scriptNode.src = "https://sdk.scdn.co/spotify-player.js";
-      document.body.append(scriptNode);
-    })();
-
-    window.onSpotifyWebPlaybackSDKReady = async () => {
       if (window.location.search) {
         const code = getCode(window.location.search);
         console.log(window.location.search);
@@ -30,17 +20,29 @@
       await checkStoredAuthToken();
       const token = localStorage.getItem('access_token');
 
-      const player_cover = document.getElementById('player_cover');
-      const player_song_name = document.getElementById('player_song_name');
-      const player_artist = document.getElementById('player_artist');
-      const player_progression = document.getElementById('player_progression');
-
-      // const token = 'BQDQUImQmePNy-67812gPhBIckq6f1XoC3cxMI_ZlVTJ00MfcPx-0FaLyIv8cESkzHChaKkLK29qO9k6m4dhGk5PyNyL9REJCowRhQMmM7VP_TcQdBkXLqSODavJDTiBCEtYmMj8uT_rpD9Ylfl8Y5mpip12AwvSeTkkdDyMOK8LfoZV1FHkwq5V-HxgWZdmMj5vOCxUDbgK-Ghlv8M';
-      // console.log('token', token);
       if (!token) {
         redirectToAuthUrl();
         return;
       }
+
+      // First initialize the yew application (it removes everything from the body unfortunately)
+      await init()
+      
+      // Then initialize the spotify player (will add things in the body)
+      const scriptNode = document.createElement('script');
+      scriptNode.src = "https://sdk.scdn.co/spotify-player.js";
+      document.body.append(scriptNode);
+    })();
+
+    window.get_access_token = () => localStorage.getItem('access_token');
+
+    window.onSpotifyWebPlaybackSDKReady = async () => {
+      const token = localStorage.getItem('access_token');
+
+      const player_cover = document.getElementById('player_cover');
+      const player_song_name = document.getElementById('player_song_name');
+      const player_artist = document.getElementById('player_artist');
+      const player_progression = document.getElementById('player_progression');
 
       const player = new Spotify.Player({
         name: 'Web Playback SDK Quick Start Player',
@@ -82,15 +84,14 @@
         paused,
         track_window: { current_track }
       }) => {
-        if (Date.now() - antiSpamTimeStamp < 200) {
+        if (Date.now() - antiSpamTimeStamp < 500) {
           return;
         } else {
           antiSpamTimeStamp = Date.now();
         }
 
         console.log('Currently Playing', current_track);
-        console.log('Position in Song', position);
-        console.log('Duration of Song', duration);
+        console.log('Position: ' + position + ' - Duration: ' + duration);
         console.log('Paused', paused);
 
         player_cover.src = current_track.album.images[1].url;
@@ -135,10 +136,10 @@
           });
         };
 
-        play({
-          playerInstance: player,
-          spotify_uri: 'spotify:track:35WLGytCEIVPLBPfhNPhTp',
-        });
+        // play({
+        //   playerInstance: player,
+        //   spotify_uri: 'spotify:track:0g0Ug1u0SVc12ley5WasVk',
+        // });
       });
 
       // Not Ready
