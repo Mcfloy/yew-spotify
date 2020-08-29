@@ -3,6 +3,8 @@
 
 <head>
   <title>Yew Spotify</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
   <script src="script.js"></script>
   <!-- We will insert our code here. -->
@@ -115,7 +117,7 @@
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
 
-        const play = ({
+        const playMethod = ({
           spotify_uri,
           playerInstance: {
             _options: {
@@ -134,6 +136,10 @@
               },
             });
           });
+        };
+
+        window.play = (spotify_uri) => {
+          playMethod({ playerInstance: player, spotify_uri });
         };
 
         // play({

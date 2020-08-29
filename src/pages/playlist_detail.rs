@@ -1,10 +1,12 @@
 use yew::prelude::*;
 use anyhow::Error;
-use crate::types::PlaylistFull;
+use crate::types::{ PlaylistFull, PlaylistTrack, Track};
 use yew::services::fetch::FetchTask;
-use crate::api;
 use crate::api::FetchResponse;
+use crate::api;
 use yew::format::Json;
+use crate::utils::parse_time_to_string;
+use crate::utils::play;
 
 struct State {
     playlist: Option<PlaylistFull>,
@@ -27,7 +29,8 @@ pub struct Props {
 pub enum Msg {
     GetPlaylist,
     GetPlaylistSuccess(PlaylistFull),
-    GetPlaylistError(Error)
+    GetPlaylistError(Error),
+    PlayTrack(String)
 }
 
 impl Component for PlaylistDetail {
@@ -75,6 +78,10 @@ impl Component for PlaylistDetail {
                 self.state.get_playlist_error = Some(error);
                 true
             }
+            Msg::PlayTrack(spotify_uri) => {
+                play(spotify_uri);
+                false
+            }
         }
     }
 
@@ -88,8 +95,12 @@ impl Component for PlaylistDetail {
         if let Some (ref playlist) = self.state.playlist {
             let tracks: Vec<Html> = playlist.tracks.items
                 .iter()
-                .map(|ref playlist_track| {
+                .map(|playlist_track| {
                     let track = &playlist_track.track;
+                    let onclick = {
+                        let uri = track.uri.clone();
+                        self.link.callback(move |_| Msg::PlayTrack(uri.clone()))
+                    };
                     let artists: String = track.artists
                         .iter()
                         .map(|a| a.name.clone())
@@ -97,25 +108,55 @@ impl Component for PlaylistDetail {
                         .join(", ");
                     html! {
                         <tr>
+                            <td>
+                                <button onclick=onclick>
+                                    <span class="material-icons">
+                                        {"play_arrow"}
+                                    </span>
+                                </button>
+                            </td>
+                            <td></td>
                             <td>{&track.name}</td>
                             <td>{artists}</td>
                             <td>{&track.album.name}</td>
                             <td>{&playlist_track.added_at.unwrap().format("%F")}</td>
-                            <td>{&track.popularity}</td>
-                            <td>{&track.duration_ms}</td>
+                            <td></td>
+                            <td>{parse_time_to_string(&track.duration_ms)}</td>
                         </tr>
                     }
                 })
                 .collect();
+
+            let mut display_name = String::from("");
+            if let Some(unwrapped_display_name) = &playlist.owner.display_name {
+                display_name = String::from(unwrapped_display_name);
+            }
             html! {
-                <>
-                    <h3>{&playlist.name}</h3>
+                <div id="playlist_list_container">
+                    <div id="playlist_list_header">
+                        <img src={&playlist.images[0].url} />
+                        <h5>{"PLAYLIST"}</h5>
+                        <h1>{&playlist.name}</h1>
+                        <span>{"Créée par "}<b>{display_name}</b>{" • "}{&playlist.tracks.total}{" titres"}</span>
+                    </div>
                     <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>{"Titre"}</th>
+                                <th>{"Artiste"}</th>
+                                <th>{"Album"}</th>
+                                <th>{"Date"}</th>
+                                <th></th>
+                                <th>{"Durée"}</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             { tracks }
                         </tbody>
                     </table>
-                </>
+                </div>
             }
         }
         else if !self.state.get_playlist_loaded {
