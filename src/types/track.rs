@@ -14,7 +14,7 @@ pub struct PlaylistTrack<T> {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
-pub struct Track {
+pub struct FullTrack {
     pub album: SimplifiedAlbum,
     pub artists: Vec<SimplifiedArtist>,
     pub available_markets: Vec<String>,
@@ -30,6 +30,27 @@ pub struct Track {
     // pub restriction
     pub name: String,
     pub popularity: u8,
+    pub preview_url: Option<String>,
+    pub track_number: i32,
+    pub r#type: String,
+    pub uri: String,
+    pub is_local: bool
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug)]
+pub struct SimplifiedTrack {
+    pub artists: Vec<SimplifiedArtist>,
+    pub available_markets: Vec<String>,
+    pub disc_number: i32,
+    pub duration_ms: i32,
+    pub explicit: bool,
+    pub external_urls: ExternalUrl,
+    pub href: String,
+    pub id: String,
+    pub is_playable: Option<bool>,
+    // pub linked_from: LinkedTrack,
+    // pub restrictions
+    pub name: String,
     pub preview_url: Option<String>,
     pub track_number: i32,
     pub r#type: String,

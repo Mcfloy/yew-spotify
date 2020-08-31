@@ -1,5 +1,13 @@
-pub mod playlist;
+use yew::format::{Json};
+use yew::services::fetch::{Response};
+use anyhow::Error;
+use yew::callback::Callback;
 
-pub use playlist::get_me_playlists;
-pub use playlist::get_playlist;
-pub use playlist::FetchResponse;
+pub type FetchResponse<T> = Response<Json<Result<T, Error>>>;
+type FetchCallback<T> = Callback<FetchResponse<T>>;
+
+mod album_api;
+mod playlist_api;
+
+pub use album_api::*;
+pub use playlist_api::*;

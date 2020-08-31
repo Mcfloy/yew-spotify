@@ -4,6 +4,8 @@ use yew_router::prelude::*;
 pub enum Route {
     #[to = "/playlist/{id}"]
     PlaylistDetail(String),
+    #[to = "/album/{id}"]
+    AlbumDetail(String),
     #[to = "/"]
     HomePage,
 }

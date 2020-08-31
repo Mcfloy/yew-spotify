@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use crate::types::{Paging, ExternalUrl, Image};
 use crate::types::user::PublicUser;
 use crate::types::followers::Followers;
-use crate::types::track::{PlaylistTrack, Track};
+use crate::types::track::{PlaylistTrack, FullTrack};
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct SimplifiedPlaylist {
@@ -34,7 +34,7 @@ pub struct PlaylistFull {
     pub owner: PublicUser,
     pub public: Option<bool>,
     pub snapshot_id: String,
-    pub tracks: Paging<PlaylistTrack<Track>>,
+    pub tracks: Paging<PlaylistTrack<FullTrack>>,
     pub r#type: String,
     pub uri: String,
 }

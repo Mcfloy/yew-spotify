@@ -19,21 +19,27 @@
         // window.history.pushState({}, 'Spotify Web Playback SDK Player', 'http://127.0.0.1:8887');
         await getAccessAndRefreshTokens(code);
       }
-      await checkStoredAuthToken();
-      const token = localStorage.getItem('access_token');
+      try {
+        await checkStoredAuthToken();
+        const token = localStorage.getItem('access_token');
 
-      if (!token) {
+        if (!token) {
+          redirectToAuthUrl();
+          return;
+        }
+
+        // First initialize the yew application (it removes everything from the body unfortunately)
+        await init()
+        
+        // Then initialize the spotify player (will add things in the body)
+        const scriptNode = document.createElement('script');
+        scriptNode.src = "https://sdk.scdn.co/spotify-player.js";
+        document.body.append(scriptNode);
+      } catch (error) {
+        console.error('The app went wrong:', error);
+        clearCookies();
         redirectToAuthUrl();
-        return;
       }
-
-      // First initialize the yew application (it removes everything from the body unfortunately)
-      await init()
-      
-      // Then initialize the spotify player (will add things in the body)
-      const scriptNode = document.createElement('script');
-      scriptNode.src = "https://sdk.scdn.co/spotify-player.js";
-      document.body.append(scriptNode);
     })();
 
     window.get_access_token = () => localStorage.getItem('access_token');

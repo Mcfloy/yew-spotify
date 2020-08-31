@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 pub struct Paging<T> {
     pub href: String,
     pub items: Vec<T>,
-    pub limit: i64,
+    pub limit: i32,
     pub next: Option<String>,
-    pub offset: i64,
+    pub offset: i32,
     pub previous: Option<String>,
-    pub total: i64
+    pub total: i32
 }

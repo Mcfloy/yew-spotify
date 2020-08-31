@@ -105,8 +105,10 @@ async function refreshToken() {
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('expires_after', Date.now() + (expires_in * 1000));
     localStorage.setItem('refresh_token', refresh_token);
+    return true;
   } else {
     console.warn('Cannot get refresh token', await response.text());
+    throw false;
   }
 }
 

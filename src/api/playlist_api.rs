@@ -1,12 +1,11 @@
 use crate::utils::get_access_token;
 use crate::types::{Paging, SimplifiedPlaylist, PlaylistFull};
-use anyhow::Error;
-use yew::callback::Callback;
-use yew::format::{Json, Nothing};
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
 
-pub type FetchResponse<T> = Response<Json<Result<T, Error>>>;
-type FetchCallback<T> = Callback<FetchResponse<T>>;
+
+use yew::services::fetch::{FetchService, FetchTask, Request};
+use yew::format::Nothing;
+use crate::api::FetchCallback;
+
 
 pub fn get_me_playlists(callback: FetchCallback<Paging<SimplifiedPlaylist>>) -> FetchTask {
     let request_uri = "https://api.spotify.com/v1/me/playlists";

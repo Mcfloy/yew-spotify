@@ -36,6 +36,7 @@ main {
 }
 
 #banner_left > a {
+    margin-left: 20px;
     font-size: 18px;
     font-weight: bold;
     height: var(--banner_top_height);
@@ -154,7 +155,7 @@ a {
     outline: none;
 }
 
-#container {
+#container, .container {
     position: absolute;
     top: var(--banner_top_height);
     left: var(--banner_left_width);
@@ -167,30 +168,66 @@ a {
     margin-bottom: 50px;
 }
 
-#playlist_list_header {
+#playlist_list_header, #container header {
     margin: 40px;
     position: relative;
 }
 
-#playlist_list_header img {
-    max-height: 150px;
+#playlist_list_image, #container header .image-container {
+    height: 150px;
+    width: 150px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+#playlist_list_header img, #container header .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#container header .side-container {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 150px - 40px);
+    margin-left: 40px;
 }
 
 #playlist_list_header h5 {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 200;
     letter-spacing: 1px;
+    margin: 0;
     position: absolute;
     top: 0px;
+    text-transform: uppercase;
     left: 170px;
+    color: #bbb;
+}
+
+#container header h5 {
+    font-size: 16px;
+    font-weight: 200;
+    letter-spacing: 1px;
+    margin: 5px 0;
+    text-transform: uppercase;
+    color: #bbb;
 }
 
 #playlist_list_header h1 {
     display: inline-block;
     position: absolute;
-    top: 20px;
-    left: 165px;
+    top: 25px;
+    margin: 0;
+    left: 167px;
     font-size: 44px;
+}
+
+#container header h1 {
+    display: inline-block;
+    margin: -5px 0 0 0;
+    line-height: 40px;
+    font-size: 40px;
 }
 
 #playlist_list_header span {
@@ -198,6 +235,16 @@ a {
     bottom: 10px;
     left: 169px;
 }
+
+#container header .type {
+    margin-right: 5px;
+}
+
+#container header .informations {
+    font-size: 15px;
+    color: #AAA;
+}
+
 
 #playlist_list_container table {
     margin: auto;
@@ -221,14 +268,19 @@ a {
 
 #playlist_list_container table tbody tr {
     height: 30px;
-    line-height: 30px;
 }
 
 #playlist_list_container table tbody tr td {
-    border-bottom: 1px solid #333;    
+    border-bottom: 1px solid #333;
+    height: 40px;
+}
+
+#playlist_list_container table tbody tr td:nth-child(1) {
+    min-width: 40px;
 }
 
 #playlist_list_container table tbody tr td:nth-child(1) button {
+    display: none;
     border: 1px solid #AAA;
     background: none;
     padding: 0;
@@ -239,13 +291,22 @@ a {
     width: 30px;
     text-align: center;
     transition: all 200ms linear 0s;
+    box-sizing: border-box;
+}
+
+#playlist_list_container table tbody tr:hover {
+    background-color: #2A2A2A;
+}
+
+#playlist_list_container table tbody tr:hover td:nth-child(1) button {
+    display: inline-block;
 }
 
 #playlist_list_container table tbody tr td:nth-child(1) button:hover {
     cursor: pointer;
-    margin: 2px;
-    width: 36px;
-    height: 36px;
+    margin: 4px;
+    width: 32px;
+    height: 32px;
 }
 
 
@@ -262,6 +323,7 @@ a {
 }
 
 #playlist_list_container table tbody tr td:nth-child(3) {
+    padding: 0 10px 0 0;
     width: 35%;
     white-space: nowrap;
     text-overflow: ellipsis;
