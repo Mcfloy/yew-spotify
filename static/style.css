@@ -246,17 +246,17 @@ a {
 }
 
 
-#playlist_list_container table {
-    margin: auto;
+#playlist_list_container table, .track-table {
+    margin: 0 auto 40px auto;
     width: calc(100% - 80px);
     border-collapse: collapse;
 }
 
-#playlist_list_container table thead tr {
+#playlist_list_container table thead tr, .track-table thead tr {
     height: 30px;
 }
 
-#playlist_list_container table thead tr th {
+#playlist_list_container table thead tr th, .track-table th {
     font-weight: 400;
     text-transform: uppercase;
     font-size: 13px;
@@ -266,20 +266,46 @@ a {
     border-bottom: 1px solid #333;
 }
 
-#playlist_list_container table tbody tr {
+#playlist_list_container table tbody tr, .track-table tbody tr {
     height: 30px;
 }
 
-#playlist_list_container table tbody tr td {
+#playlist_list_container table tbody tr:hover, .track-table tbody tr:hover {
+    background-color: #2A2A2A;
+}
+
+#playlist_list_container table tbody tr td, .track-table td {
     border-bottom: 1px solid #333;
     height: 40px;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) {
+#playlist_list_container table tbody tr td:nth-child(1), .track-table .play {
+    width: 40px;
     min-width: 40px;
+    max-width: 40px;
+    text-align: center;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) button {
+.track-table .love {
+    width: 40px;
+    text-align: center;
+}
+
+.track-table .love:hover {
+    cursor: pointer;
+}
+
+.track-table .love .material-icons {
+    font-size: 18px;
+    line-height: 40px;
+}
+
+.track-table .duration {
+    width: 60px;
+    text-align: center;
+}
+
+#playlist_list_container table tbody tr td:nth-child(1) button, .track-table .play button {
     display: none;
     border: 1px solid #AAA;
     background: none;
@@ -294,15 +320,19 @@ a {
     box-sizing: border-box;
 }
 
-#playlist_list_container table tbody tr:hover {
-    background-color: #2A2A2A;
-}
-
-#playlist_list_container table tbody tr:hover td:nth-child(1) button {
+#playlist_list_container table tbody tr:hover td:nth-child(1) button, .track-table tbody tr:hover .play button {
     display: inline-block;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) button:hover {
+.track-table tbody tr:hover .play .track-number {
+    display: none;
+}
+
+.track-table tbody tr:hover .play .track-number {
+    opacity: 0;
+}
+
+#playlist_list_container table tbody tr td:nth-child(1) button:hover, .track-table .play button:hover {
     cursor: pointer;
     margin: 4px;
     width: 32px;
@@ -310,11 +340,11 @@ a {
 }
 
 
-#playlist_list_container table tbody tr td:nth-child(1) button:focus {
+#playlist_list_container table tbody tr td:nth-child(1) button:focus, .track-table .play button:focus {
     outline: none;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) button span.material-icons {
+#playlist_list_container table tbody tr td:nth-child(1) button span.material-icons, .track-table .play .material-icons {
     height: 30px;
     line-height: 30px;
     font-size: 25px;
@@ -322,7 +352,7 @@ a {
     vertical-align: top;
 }
 
-#playlist_list_container table tbody tr td:nth-child(3) {
+#playlist_list_container table tbody tr td:nth-child(3), .track-table .name {
     padding: 0 10px 0 0;
     width: 35%;
     white-space: nowrap;
@@ -351,4 +381,8 @@ a {
     width: 100%;
     white-space: nowrap;
     padding-right: 20px;
+}
+
+.track-table td a:hover {
+    text-decoration: underline;
 }

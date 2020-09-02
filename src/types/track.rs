@@ -59,6 +59,31 @@ pub struct SimplifiedTrack {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
+pub struct Track {
+    pub album: Option<SimplifiedAlbum>,
+    pub artists: Vec<SimplifiedArtist>,
+    pub available_markets: Vec<String>,
+    pub disc_number: u16,
+    pub duration_ms: u32,
+    pub explicit: bool,
+    // pub external_ids: Option<Vec<ExternalId>> ?
+    pub external_urls: ExternalUrl,
+    pub href: String,
+    pub id: String,
+    pub is_playable: Option<bool>,
+    // pub linked_from: LinkedTrack,
+    // pub restrictions
+    pub name: String,
+    pub preview_url: Option<String>,
+    pub popularity: Option<u8>,
+    pub track_number: u32,
+    pub r#type: String,
+    pub uri: String,
+    pub is_local: bool,
+    pub added_at: Option<DateTime<Utc>>
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Episode {
     // TODO
     // https://developer.spotify.com/documentation/web-api/reference/object-model/#episode-object-full

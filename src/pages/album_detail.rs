@@ -5,9 +5,8 @@ use yew::{ComponentLink, Component, Html};
 use yew::services::fetch::{FetchTask};
 use crate::api::FetchResponse;
 use crate::api;
-use crate::utils::parse_time_to_string;
 use yew::format::Json;
-use crate::components::AppHeader;
+use crate::components::{AppHeader, TrackTable, TrackTableHeader};
 
 struct State {
     album: Option<FullAlbum>,
@@ -95,7 +94,13 @@ impl Component for AlbumDetail {
                 .map(|a| a.name.clone())
                 .collect();
 
-            let total_duration: i32 = album.tracks.items.iter().map(|track| track.duration_ms).sum();
+            let headers = vec![
+                TrackTableHeader::TrackNumber,
+                TrackTableHeader::Name,
+                TrackTableHeader::Duration
+            ];
+
+            let total_duration: u32 = album.tracks.items.iter().map(|track| track.duration_ms).sum();
             html! {
                 <>
                     <AppHeader
@@ -107,6 +112,7 @@ impl Component for AlbumDetail {
                         total_duration=total_duration
                         release_date=&album.release_date
                          />
+                    <TrackTable tracks=&album.tracks.items headers=headers />
                 </>
             }
         } else if !self.state.get_album_loaded {

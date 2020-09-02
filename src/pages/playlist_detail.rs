@@ -169,6 +169,8 @@ impl PlaylistDetail {
             .map(|a| a.name.clone())
             .collect::<Vec<String>>()
             .join(", ");
+
+        let duration_ms = track.duration_ms as u32;
         html! {
             <tr>
                 <td>
@@ -188,7 +190,7 @@ impl PlaylistDetail {
                 </td>
                 <td>{&playlist_track.added_at.unwrap().format("%F")}</td>
                 <td></td>
-                <td>{parse_time_to_string(&track.duration_ms)}</td>
+                <td>{parse_time_to_string(&duration_ms)}</td>
             </tr>
         }
     }

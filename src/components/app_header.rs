@@ -10,8 +10,8 @@ pub struct Props {
     pub name: String,
     pub author: String,
     pub image: String,
-    pub total: i32,
-    pub total_duration: i32,
+    pub total: u32,
+    pub total_duration: u32,
     pub release_date: String,
     pub header_type: String
 }

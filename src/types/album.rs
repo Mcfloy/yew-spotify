@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::types::{ExternalUrl, Image, Paging, SimplifiedTrack};
+use crate::types::{ExternalUrl, Image, Paging, SimplifiedTrack, Track};
 use crate::types::artist::SimplifiedArtist;
 use crate::types::copyright::Copyright;
 
@@ -38,7 +38,8 @@ pub struct FullAlbum {
     pub popularity: i32,
     pub release_date: String,
     pub release_date_precision: String,
-    pub tracks: Paging<SimplifiedTrack>,
+    pub tracks: Paging<Track>,
     pub r#type: String,
     pub uri: String
 }
+

@@ -12,3 +12,4 @@ pub use player_information::PlayerInformation;
 pub use playlist_list::PlaylistList;
 pub use search_bar::SearchBar;
 pub use app_header::AppHeader;
+pub use track_table::{TrackTable, TrackTableHeader};
