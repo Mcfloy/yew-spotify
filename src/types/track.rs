@@ -83,6 +83,33 @@ pub struct Track {
     pub added_at: Option<DateTime<Utc>>
 }
 
+impl Track {
+    pub fn from_playlist_track(playlist_track: &PlaylistTrack<FullTrack>) -> Self {
+        // TODO Remove safe cast
+        let track = &playlist_track.track;
+        Self {
+            album: Option::from(track.album.clone()),
+            artists: track.artists.clone(),
+            available_markets: track.available_markets.clone(),
+            disc_number: track.disc_number as u16,
+            duration_ms: track.duration_ms as u32,
+            explicit: track.explicit,
+            external_urls: track.external_urls.clone(),
+            href: track.href.clone(),
+            id: track.id.clone(),
+            is_playable: track.is_playable.clone(),
+            name: track.name.clone(),
+            preview_url: track.preview_url.clone(),
+            popularity: Option::from(track.popularity),
+            track_number: track.track_number as u32,
+            r#type: track.r#type.clone(),
+            uri: track.uri.clone(),
+            is_local: track.is_local,
+            added_at: playlist_track.added_at
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct Episode {
     // TODO
