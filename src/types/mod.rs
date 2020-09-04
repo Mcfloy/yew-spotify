@@ -16,3 +16,4 @@ pub use image::Image;
 
 pub use track::*;
 pub use album::*;
+pub use artist::*;

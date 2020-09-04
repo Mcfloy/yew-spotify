@@ -89,11 +89,6 @@ impl Component for AlbumDetail {
 
     fn view(&self) -> Html {
         if let Some(ref album) = self.state.album {
-            let artists: Vec<String> = album.artists
-                .iter()
-                .map(|a| a.name.clone())
-                .collect();
-
             let headers = vec![
                 TrackTableHeader::TrackNumber,
                 TrackTableHeader::Name,
@@ -106,7 +101,7 @@ impl Component for AlbumDetail {
                     <AppHeader
                         header_type=&album.r#type
                         name=&album.name
-                        author=artists.join(", ")
+                        authors=&album.artists
                         image=&album.images[0].url
                         total=album.tracks.total
                         total_duration=total_duration

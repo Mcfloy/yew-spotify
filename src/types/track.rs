@@ -18,8 +18,8 @@ pub struct FullTrack {
     pub album: SimplifiedAlbum,
     pub artists: Vec<SimplifiedArtist>,
     pub available_markets: Vec<String>,
-    pub disc_number: i32,
-    pub duration_ms: i32,
+    pub disc_number: u16,
+    pub duration_ms: u32,
     pub explicit: bool,
     // pub external_ids
     pub external_urls: ExternalUrl,

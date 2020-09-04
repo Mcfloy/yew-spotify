@@ -33,7 +33,7 @@ impl Component for PlaylistItem {
     fn view(&self) -> Html {
         type Anchor = RouterAnchor<Route>;
         html! {
-            <Anchor route=Route::PlaylistDetail(self.props.id.to_string()) classes="playlist_item_anchor">
+            <Anchor route=Route::PlaylistDetail(self.props.id.to_string())>
                 <li>{&self.props.name}</li>
             </Anchor>
         }

@@ -1,6 +1,6 @@
 use yew::prelude::*;
 use crate::types::{Track};
-use crate::utils::{ play, parse_time_to_string };
+use crate::utils::{play, parse_time_to_short_string};
 use yew_router::prelude::RouterAnchor;
 use crate::route::Route;
 
@@ -42,13 +42,14 @@ impl Component for TrackTable {
         match msg {
             Msg::PlayTrack(spotify_uri) => {
                 play(spotify_uri);
-                false
+                true
             }
         }
     }
 
-    fn change(&mut self, _props: Self::Properties) -> bool {
-        false
+    fn change(&mut self, props: Self::Properties) -> bool {
+        self.props = props;
+        true
     }
 
     fn view(&self) -> Html {
@@ -75,11 +76,16 @@ impl TrackTable {
             let uri = track.uri.clone();
             self.link.callback(move |_| Msg::PlayTrack(uri.clone()))
         };
-        let artists: String = track.artists
+        let artists: Vec<Html> = track.artists
             .iter()
-            .map(|a| a.name.clone())
-            .collect::<Vec<String>>()
-            .join(", ");
+            .map(|artist| {
+                html! {
+                    <Anchor route=Route::ArtistDetail(artist.id.clone()) classes="link_anchor">
+                        <span>{artist.name.clone()}</span>
+                    </Anchor>
+                }
+            })
+            .collect();
 
         let track_number_node = if headers.contains(&TrackTableHeader::TrackNumber) {
             html! {
@@ -108,9 +114,11 @@ impl TrackTable {
             html! {}
         };
 
-        let artists_node = if headers.contains(&TrackTableHeader::Artist) {
+        let artist_node = if headers.contains(&TrackTableHeader::Artist) {
             html! {
-                <td class="artists">{artists}</td>
+                <td class="artist">
+                    { artists }
+                </td>
             }
         } else {
             html! {}
@@ -120,8 +128,8 @@ impl TrackTable {
             if let Some(album) = &track.album {
                 html! {
                     <td class="album">
-                        <Anchor route=Route::AlbumDetail(album.id.clone()) classes="playlist_item_anchor">
-                            {&album.name}
+                        <Anchor route=Route::AlbumDetail(album.id.clone()) classes="link_anchor">
+                            <span>{&album.name}</span>
                         </Anchor>
                     </td>
                 }
@@ -146,7 +154,7 @@ impl TrackTable {
 
         let duration_node = if headers.contains(&TrackTableHeader::Duration) {
             html! {
-                <td class="duration">{parse_time_to_string(&track.duration_ms)}</td>
+                <td class="duration">{parse_time_to_short_string(&track.duration_ms)}</td>
             }
         } else {
             html! {}
@@ -175,7 +183,7 @@ impl TrackTable {
                     </span>
                 </td>
                 { name_node }
-                { artists_node }
+                { artist_node }
                 { album_node }
                 { added_at_node }
                 { options_node }

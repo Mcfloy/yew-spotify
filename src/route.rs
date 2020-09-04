@@ -6,6 +6,8 @@ pub enum Route {
     PlaylistDetail(String),
     #[to = "/album/{id}"]
     AlbumDetail(String),
+    #[to = "/artist/{id}"]
+    ArtistDetail(String),
     #[to = "/"]
     HomePage,
 }

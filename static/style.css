@@ -339,7 +339,6 @@ a {
     height: 32px;
 }
 
-
 #playlist_list_container table tbody tr td:nth-child(1) button:focus, .track-table .play button:focus {
     outline: none;
 }
@@ -353,7 +352,6 @@ a {
 }
 
 #playlist_list_container table tbody tr td:nth-child(3), .track-table .name {
-    padding: 0 10px 0 0;
     width: 35%;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -361,7 +359,7 @@ a {
     max-width: 1px;
 }
 
-#playlist_list_container table tbody tr td:nth-child(4) {
+.track-table .artist {
     width: 20%;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -369,7 +367,7 @@ a {
     max-width: 1px;
 }
 
-#playlist_list_container table tbody tr td:nth-child(5) {
+.track-table .album {
     width: 32%;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -377,12 +375,21 @@ a {
     max-width: 1px;
 }
 
-#playlist_list_container table tbody tr td:nth-child(6) {
-    width: 100%;
+.track-table .added_at {
     white-space: nowrap;
     padding-right: 20px;
 }
 
-.track-table td a:hover {
+.track-table td a:hover span {
     text-decoration: underline;
+}
+
+.track-table .name,
+.track-table .artist,
+.track-table .album {
+    padding: 0 10px;
+}
+
+.link_anchor:not(:last-of-type)::after {
+    content: ', ';
 }

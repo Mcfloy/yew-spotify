@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::types::{ExternalUrl, Image, Paging, SimplifiedTrack, Track};
+use crate::types::{ExternalUrl, Image, Paging, Track, Artist};
 use crate::types::artist::SimplifiedArtist;
 use crate::types::copyright::Copyright;
 
@@ -24,7 +24,7 @@ pub struct SimplifiedAlbum {
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct FullAlbum {
     pub album_type: String,
-    pub artists: Vec<SimplifiedArtist>,
+    pub artists: Vec<Artist>,
     pub available_markets: Vec<String>,
     pub copyrights: Vec<Copyright>,
     // pub external_ids: ExternalId,

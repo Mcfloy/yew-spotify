@@ -2,7 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 use yew_router::components::RouterAnchor;
 
-use crate::pages::{Home, PlaylistDetail, AlbumDetail};
+use crate::pages::{Home, PlaylistDetail, AlbumDetail, ArtistDetail};
 use crate::route::Route;
 
 use crate::components::PlaylistList;
@@ -35,6 +35,7 @@ impl Component for App {
         let render = Router::render(|switch: Route| match switch {
             Route::PlaylistDetail(id) => html! { <PlaylistDetail id=id /> },
             Route::AlbumDetail(id) => html! { <AlbumDetail id=id /> },
+            Route::ArtistDetail(id) => html! { <ArtistDetail id=id /> },
             Route::HomePage => html! { <Home /> },
         });
 
