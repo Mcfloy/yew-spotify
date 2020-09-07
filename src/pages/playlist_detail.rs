@@ -149,8 +149,7 @@ impl Component for PlaylistDetail {
                     <TrackTable tracks=&tracks headers=headers />
                 </>
             }
-        }
-        else if !self.state.get_playlist_loaded {
+        } else if !self.state.get_playlist_loaded {
             html! {
                 <div>{"Loading ..."}</div>
             }

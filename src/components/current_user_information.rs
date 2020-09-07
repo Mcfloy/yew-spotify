@@ -1,20 +1,27 @@
 use yew::prelude::*;
+use crate::types::PrivateUser;
+use crate::utils;
 
 pub struct CurrentUserInformation {
-    props: Props
+    state: State
 }
 
-#[derive(Properties, Clone)]
-pub struct Props {
-    pub name: String
+pub struct State {
+    user: PrivateUser
 }
 
 impl Component for CurrentUserInformation {
     type Message = ();
-    type Properties = Props;
+    type Properties = ();
 
-    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        Self { props }
+    fn create(_props: Self::Properties, _link: ComponentLink<Self>) -> Self {
+        let user_str = utils::getItem(String::from("user"));
+        let user = serde_json::from_str::<PrivateUser>(user_str.as_str()).unwrap();
+        Self {
+            state: State {
+                user
+            }
+        }
     }
 
     fn update(&mut self, _msg: Self::Message) -> bool {
@@ -26,9 +33,14 @@ impl Component for CurrentUserInformation {
     }
 
     fn view(&self) -> Html {
+        let display_name = if let Some(name) = &self.state.user.display_name {
+            name.clone()
+        } else {
+          String::from("")
+        };
         html! {
             <div id="current_user_information">
-                <span>{&self.props.name}</span>
+                <span>{display_name}</span>
             </div>
         }
     }

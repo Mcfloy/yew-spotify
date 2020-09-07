@@ -62,7 +62,7 @@ pub struct SimplifiedTrack {
 pub struct Track {
     pub album: Option<SimplifiedAlbum>,
     pub artists: Vec<SimplifiedArtist>,
-    pub available_markets: Vec<String>,
+    pub available_markets: Option<Vec<String>>,
     pub disc_number: u16,
     pub duration_ms: u32,
     pub explicit: bool,
@@ -90,7 +90,7 @@ impl Track {
         Self {
             album: Option::from(track.album.clone()),
             artists: track.artists.clone(),
-            available_markets: track.available_markets.clone(),
+            available_markets: Some(track.available_markets.clone()),
             disc_number: track.disc_number as u16,
             duration_ms: track.duration_ms as u32,
             explicit: track.explicit,

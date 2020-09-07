@@ -7,6 +7,13 @@ extern "C" {
 
     #[wasm_bindgen(js_namespace=window)]
     pub fn play(spotify_uri: String);
+
+    #[wasm_bindgen(js_namespace=localStorage)]
+    pub fn setItem(key: String, value: String);
+
+    #[wasm_bindgen(js_namespace=localStorage)]
+    pub fn getItem(key: String) -> String;
+
 }
 
 pub fn parse_time_to_short_string(timestamp_in_ms: &u32) -> String {

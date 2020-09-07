@@ -54,7 +54,7 @@ impl Component for AppHeader {
                 if author.r#type == "artist" {
                     html! {
                         <Anchor route=Route::ArtistDetail(author.id.clone()) classes="link_anchor">
-                            <span>{&author.name}</span>
+                            <b>{&author.name}</b>
                         </Anchor>
                     }
                 } else {
@@ -66,7 +66,7 @@ impl Component for AppHeader {
             .collect();
 
         html! {
-            <header>
+            <header class="header">
                 <div class="image-container">
                     <img src={&self.props.image} />
                 </div>

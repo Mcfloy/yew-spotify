@@ -6,7 +6,7 @@ use crate::api;
 use crate::api::FetchResponse;
 use yew::format::{Json};
 use crate::types::Artist;
-use crate::components::AppBanner;
+use crate::components::{AppBanner};
 
 struct State {
     artist: Option<Artist>,
@@ -91,9 +91,7 @@ impl Component for ArtistDetail {
         if let Some(ref artist) = self.state.artist {
             html! {
                 <>
-                    <AppBanner
-                        artist=artist.clone()
-                    />
+                    <AppBanner artist=artist.clone() />
                     // Top tracks
                     // Albums
                     // Related artists

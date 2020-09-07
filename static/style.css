@@ -2,12 +2,15 @@
     --banner_top_height: 50px;
     --banner_bottom_height: 70px;
     --banner_left_width: 260px;
+    --bg-color: #1f1f1f;
+    --header-img-size: 150px;
+    --banner-img-size: 250px;
 }
 
 body {
     margin: 0;
     font-size: 0;
-    background-color: #1f1f1f;
+    background-color: var(--bg-color);
     color: #fafafa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -146,7 +149,7 @@ a {
 
 #search_bar {
     border: none;
-    margin: 12px 0 12px 20px;
+    margin: 12px 0 12px 40px;
     padding: 5px 5px 5px 10px;
     border-radius: 12px;
 }
@@ -164,23 +167,30 @@ a {
     font-size: 16px;
 }
 
-#playlist_list_container {
-    margin-bottom: 50px;
-}
 
-#playlist_list_header, #container header {
+#container header {
     margin: 40px;
     position: relative;
 }
 
-#playlist_list_image, #container header .image-container {
-    height: 150px;
-    width: 150px;
+#container header.header .image-container {
     vertical-align: top;
     display: inline-block;
 }
 
-#playlist_list_header img, #container header .image-container img {
+#container header.header .image-container {
+    width: var(--header-img-size);
+    height: var(--header-img-size);
+}
+
+#container header.banner .image-container {
+    height: var(--banner-img-size);
+    width: var(--banner-img-size);
+    vertical-align: top;
+    display: inline-block;
+}
+
+#container header .image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -189,51 +199,45 @@ a {
 #container header .side-container {
     display: inline-block;
     vertical-align: top;
-    width: calc(100% - 150px - 40px);
+    width: calc(100% - var(--header-img-size) - 40px);
     margin-left: 40px;
 }
 
-#playlist_list_header h5 {
-    font-size: 16px;
-    font-weight: 200;
-    letter-spacing: 1px;
-    margin: 0;
-    position: absolute;
-    top: 0px;
-    text-transform: uppercase;
-    left: 170px;
-    color: #bbb;
+#container .header .side-container {
+    width: calc(100% - var(--header-img-size) - 40px);
+}
+
+#container .banner .side-container {
+    width: calc(100% - var(--banner-img-size) - 40px);
+}
+
+#container header .side-container .link_anchor:hover {
+    text-decoration: underline;
 }
 
 #container header h5 {
     font-size: 16px;
-    font-weight: 200;
+    font-weight: 400;
     letter-spacing: 1px;
     margin: 5px 0;
     text-transform: uppercase;
     color: #bbb;
 }
 
-#playlist_list_header h1 {
-    display: inline-block;
-    position: absolute;
-    top: 25px;
-    margin: 0;
-    left: 167px;
-    font-size: 44px;
-}
-
 #container header h1 {
     display: inline-block;
-    margin: -5px 0 0 0;
+    margin: -5px 0 10px 0;
+    width: 100%;
     line-height: 40px;
     font-size: 40px;
 }
 
-#playlist_list_header span {
-    position: absolute;
-    bottom: 10px;
-    left: 169px;
+#container header h4 {
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #BBB;
+    margin-bottom: 0px;
 }
 
 #container header .type {
@@ -246,17 +250,17 @@ a {
 }
 
 
-#playlist_list_container table, .track-table {
+.track-table {
     margin: 0 auto 40px auto;
     width: calc(100% - 80px);
     border-collapse: collapse;
 }
 
-#playlist_list_container table thead tr, .track-table thead tr {
+.track-table thead tr {
     height: 30px;
 }
 
-#playlist_list_container table thead tr th, .track-table th {
+.track-table th {
     font-weight: 400;
     text-transform: uppercase;
     font-size: 13px;
@@ -266,20 +270,20 @@ a {
     border-bottom: 1px solid #333;
 }
 
-#playlist_list_container table tbody tr, .track-table tbody tr {
+.track-table tbody tr {
     height: 30px;
 }
 
-#playlist_list_container table tbody tr:hover, .track-table tbody tr:hover {
+.track-table tbody tr:hover {
     background-color: #2A2A2A;
 }
 
-#playlist_list_container table tbody tr td, .track-table td {
+.track-table td {
     border-bottom: 1px solid #333;
     height: 40px;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1), .track-table .play {
+.track-table .play {
     width: 40px;
     min-width: 40px;
     max-width: 40px;
@@ -305,7 +309,7 @@ a {
     text-align: center;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) button, .track-table .play button {
+.track-table .play button {
     display: none;
     border: 1px solid #AAA;
     background: none;
@@ -320,7 +324,7 @@ a {
     box-sizing: border-box;
 }
 
-#playlist_list_container table tbody tr:hover td:nth-child(1) button, .track-table tbody tr:hover .play button {
+.track-table tbody tr:hover .play button {
     display: inline-block;
 }
 
@@ -332,18 +336,18 @@ a {
     opacity: 0;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) button:hover, .track-table .play button:hover {
+.track-table .play button:hover {
     cursor: pointer;
     margin: 4px;
     width: 32px;
     height: 32px;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) button:focus, .track-table .play button:focus {
+.track-table .play button:focus {
     outline: none;
 }
 
-#playlist_list_container table tbody tr td:nth-child(1) button span.material-icons, .track-table .play .material-icons {
+.track-table .play .material-icons {
     height: 30px;
     line-height: 30px;
     font-size: 25px;
@@ -351,7 +355,7 @@ a {
     vertical-align: top;
 }
 
-#playlist_list_container table tbody tr td:nth-child(3), .track-table .name {
+.track-table .name {
     width: 35%;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -392,4 +396,52 @@ a {
 
 .link_anchor:not(:last-of-type)::after {
     content: ', ';
+}
+
+.genres {
+    display: inline-block;
+    list-style-type: none;
+    margin: 5px 0 5px 10px;
+    padding: 0;
+}
+
+.genres li {
+    display: inline-block;
+    margin: 0 5px 0 0;
+    background-color: #AAA;
+    color: #111;
+    border-radius: 4px;
+    padding: 0px 4px 2px 4px;
+}
+
+.side-container .track-table {
+    width: 100% !important;
+}
+
+.album-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.album-list li {
+    margin-right: 30px;
+    width: 180px;
+    margin-bottom: 30px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.album-list li img {
+    height: 180px;
+    display: block;
+}
+
+.album-list li a {
+    display: block;
+}
+
+.album-list li span {
+    display: block;
+    color: #666;
 }

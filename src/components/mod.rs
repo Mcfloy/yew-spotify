@@ -6,6 +6,8 @@ mod search_bar;
 mod app_banner;
 mod app_header;
 mod track_table;
+mod top_tracks;
+mod artist_albums;
 
 pub use current_user_information::CurrentUserInformation;
 pub use player_information::PlayerInformation;
@@ -14,3 +16,5 @@ pub use search_bar::SearchBar;
 pub use app_header::AppHeader;
 pub use track_table::{TrackTable, TrackTableHeader};
 pub use app_banner::*;
+pub use top_tracks::*;
+pub use artist_albums::*;

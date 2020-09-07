@@ -74,6 +74,7 @@
         // if (eventHandlerInitialized === false) {
         //   return;
         // }
+        const player_progression = document.getElementById('player_progression');
         player_progression.innerText = parseTimeToString(playerSongPosition) + ' - ' + parseTimeToString(playerSongDuration);
         playerSongPosition += 200;
         console.log(playerSongPosition);
@@ -97,6 +98,11 @@
         } else {
           antiSpamTimeStamp = Date.now();
         }
+
+        const player_cover = document.getElementById('player_cover');
+        const player_song_name = document.getElementById('player_song_name');
+        const player_artist = document.getElementById('player_artist');
+        const player_progression = document.getElementById('player_progression');
 
         console.log('Currently Playing', current_track);
         console.log('Position: ' + position + ' - Duration: ' + duration);

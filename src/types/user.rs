@@ -16,7 +16,7 @@ pub struct PublicUser {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
-pub struct PrivateUser{
+pub struct PrivateUser {
     pub country: String, // private
     pub display_name: Option<String>,
     pub email: String, // private
