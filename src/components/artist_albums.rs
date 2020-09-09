@@ -19,6 +19,7 @@ pub(crate) struct ArtistAlbums {
 pub struct Props {
     pub artist_id: String,
     pub album_group: String,
+    pub title: String
 }
 
 struct State {
@@ -92,6 +93,9 @@ impl Component for ArtistAlbums {
         type Anchor = RouterAnchor<Route>;
 
         if let Some(ref artist_albums) = &self.state.artist_albums {
+            if artist_albums.is_empty() {
+                return html! {}
+            }
             let artist_albums_node: Vec<Html> = artist_albums.iter()
                 .map(|artist_album| {
                     html! {
@@ -106,9 +110,12 @@ impl Component for ArtistAlbums {
                 })
                 .collect();
             html! {
-                <ul class="album-list">
-                    { artist_albums_node }
-                </ul>
+                <>
+                    <h4>{ &self.props.title }</h4>
+                    <ul class="album-list">
+                        { artist_albums_node }
+                    </ul>
+                </>
             }
         } else if !self.state.get_artist_albums_loaded {
             html! {

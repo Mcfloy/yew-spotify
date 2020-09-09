@@ -92,11 +92,17 @@ impl Component for TopTracks {
             TrackTableHeader::Popularity
         ];
         if let Some(ref tracks) = self.state.tracks {
+            if tracks.is_empty() {
+                return html! {}
+            }
             html! {
-                <TrackTable
-                    tracks=tracks
-                    headers=headers
-                />
+                <>
+                    <h4>{"Top tracks"}</h4>
+                    <TrackTable
+                        tracks=tracks
+                        headers=headers
+                    />
+                </>
             }
         } else if !self.state.get_top_tracks_loaded {
             html! {

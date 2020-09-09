@@ -75,16 +75,23 @@ impl Component for AppBanner {
                         {followers}
                     </span>
                     { genres }
-                    <h4>{"Top tracks"}</h4>
                     <TopTracks artist_id=self.props.artist.id.clone() />
-                    <h4>{"Albums"}</h4>
-                    <ArtistAlbums artist_id=self.props.artist.id.clone() album_group={"album"} />
-                    <h4>{"Singles and EP"}</h4>
-                    <ArtistAlbums artist_id=self.props.artist.id.clone() album_group={"single"} />
-                    <h4>{"Playlists of "} {self.props.artist.name.clone()}</h4>
-                    <ArtistAlbums artist_id=self.props.artist.id.clone() album_group={"compilation"} />
-                    <h4>{"Appears on"}</h4>
-                    <ArtistAlbums artist_id=self.props.artist.id.clone() album_group={"appears_on"} />
+                    <ArtistAlbums
+                        artist_id=self.props.artist.id.clone()
+                        album_group={"album"}
+                        title={"Albums"} />
+                    <ArtistAlbums
+                        artist_id=self.props.artist.id.clone()
+                        album_group={"single"}
+                        title={"Singles et EP"} />
+                    <ArtistAlbums
+                        artist_id=self.props.artist.id.clone()
+                        album_group={"compilation"}
+                        title={format!("Playlists de {}", self.props.artist.name.clone())}/>
+                    <ArtistAlbums
+                        artist_id=self.props.artist.id.clone()
+                        album_group={"appears_on"}
+                        title={"Apparaît sur"}/>
                 </div>
             </header>
         }

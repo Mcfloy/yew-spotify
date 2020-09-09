@@ -305,7 +305,7 @@ a {
 }
 
 .track-table .duration {
-    width: 60px;
+    min-width: 60px;
     text-align: center;
 }
 
@@ -381,7 +381,6 @@ a {
 
 .track-table .added_at {
     white-space: nowrap;
-    padding-right: 20px;
 }
 
 .track-table td a:hover span {
@@ -438,6 +437,11 @@ a {
 }
 
 .album-list li a {
+    min-height: 30px;
+    line-height: 30px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
     display: block;
 }
 
