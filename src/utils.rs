@@ -14,6 +14,9 @@ extern "C" {
     #[wasm_bindgen(js_namespace=localStorage)]
     pub fn getItem(key: String) -> String;
 
+    #[wasm_bindgen(js_namespace=console)]
+    pub fn log(msg: String);
+
 }
 
 pub fn parse_time_to_short_string(timestamp_in_ms: &u32) -> String {

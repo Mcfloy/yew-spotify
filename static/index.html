@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Yew Spotify</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
   <script src="script.js"></script>
-  <!-- We will insert our code here. -->
   <script type="module">
     import init from "./wasm.js"
     
+    // Main method for launching the app
     (async _ => {
+      // Check if we have a code in the URI
       if (window.location.search) {
         const code = getCode(window.location.search);
-        console.log(window.location.search);
-        console.log(code);
         // window.history.pushState({}, 'Spotify Web Playback SDK Player', 'http://127.0.0.1:8887');
         await getAccessAndRefreshTokens(code);
       }
@@ -29,7 +26,7 @@
         }
 
         // First initialize the yew application (it removes everything from the body unfortunately)
-        await init()
+        await init();
         
         // Then initialize the spotify player (will add things in the body)
         const scriptNode = document.createElement('script');
@@ -42,20 +39,26 @@
       }
     })();
 
+    // Externalize the methods somewhere else
     window.get_access_token = () => localStorage.getItem('access_token');
 
+    // Initialize the Spotify Player once everything is ready
     window.onSpotifyWebPlaybackSDKReady = async () => {
       const token = localStorage.getItem('access_token');
 
+      // TODO: Transfer to a rust utility method.
       const player_cover = document.getElementById('player_cover');
       const player_song_name = document.getElementById('player_song_name');
       const player_artist = document.getElementById('player_artist');
       const player_progression = document.getElementById('player_progression');
 
       const player = new Spotify.Player({
-        name: 'Web Playback SDK Quick Start Player',
+        name: 'Yew Spotify Player',
         getOAuthToken: cb => { cb(token); }
       });
+
+      // Expose the player to use it as a debugging tool. Won't be the case after that.
+      window.spotifyPlayer = player;
 
       // Error handling
       player.addListener('initialization_error', ({ message }) => { console.error('init error: ' + message); });
@@ -68,17 +71,11 @@
       player.addListener('playback_error', ({ message }) => { console.error(message); });
 
 
-      let playerSongPosition = undefined;
-      let playerSongDuration = undefined;
-      let playTimeEventHandler = () => {
-        // if (eventHandlerInitialized === false) {
-        //   return;
-        // }
+      // TODO: Can be externalized to a Rust method
+      let playTimeEventHandler = async () => {
         const player_progression = document.getElementById('player_progression');
-        player_progression.innerText = parseTimeToString(playerSongPosition) + ' - ' + parseTimeToString(playerSongDuration);
-        playerSongPosition += 200;
-        console.log(playerSongPosition);
-        console.log(playerSongDuration);
+        let { position, duration } = await player.getCurrentState();
+        player_progression.innerText = parseTimeToString(position) + ' - ' + parseTimeToString(duration);
       };
 
       let intervalNumberInstance;
@@ -93,12 +90,13 @@
         paused,
         track_window: { current_track }
       }) => {
-        if (Date.now() - antiSpamTimeStamp < 500) {
-          return;
-        } else {
-          antiSpamTimeStamp = Date.now();
-        }
+        // if (Date.now() - antiSpamTimeStamp < 500) {
+        //   return;
+        // } else {
+        //   antiSpamTimeStamp = Date.now();
+        // }
 
+        // TODO: Can be transfered to a rust method.
         const player_cover = document.getElementById('player_cover');
         const player_song_name = document.getElementById('player_song_name');
         const player_artist = document.getElementById('player_artist');
@@ -112,8 +110,6 @@
         player_artist.innerText = current_track.artists.map(artist => artist.name).join(', ');
         player_song_name.innerText = current_track.name;
 
-        playerSongPosition = position;
-        playerSongDuration = duration;
         player_progression.innerText = parseTimeToString(position) + ' - ' + parseTimeToString(duration);
         if (paused === false && !intervalNumberInstance) {
           console.log('create play time event handler');
@@ -129,6 +125,7 @@
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
 
+        // Generate play method (should be transfered to script.js ?)
         const playMethod = ({
           spotify_uri,
           playerInstance: {
@@ -154,10 +151,7 @@
           playMethod({ playerInstance: player, spotify_uri });
         };
 
-        // play({
-        //   playerInstance: player,
-        //   spotify_uri: 'spotify:track:0g0Ug1u0SVc12ley5WasVk',
-        // });
+        // TODO: Create the "Queue a song to the list" method.
       });
 
       // Not Ready
@@ -167,13 +161,8 @@
 
       // Connect to the player!
       player.connect();
-
-
     };
   </script>
 </head>
-
-<body>
-</body>
-
+<body></body>
 </html>

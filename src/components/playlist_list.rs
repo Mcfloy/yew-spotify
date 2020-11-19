@@ -20,8 +20,8 @@ pub struct PlaylistList {
 }
 
 pub enum Msg {
-    GetPlaylists,
-    GetPlaylistsSuccess(Vec<SimplifiedPlaylist>),
+    GetPlaylists(Option<String>),
+    GetPlaylistsSuccess(Vec<SimplifiedPlaylist>, Option<String>),
     GetPlaylistsError(Error)
 }
 
@@ -32,7 +32,7 @@ impl Component for PlaylistList {
     fn create(_props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let playlists = vec![];
 
-        link.send_message(Msg::GetPlaylists);
+        link.send_message(Msg::GetPlaylists(None));
 
         Self {
             state: State {
@@ -47,23 +47,38 @@ impl Component for PlaylistList {
 
     fn update(&mut self, msg: Self::Message) -> bool {
         match msg {
-            Msg::GetPlaylists => {
+            Msg::GetPlaylists(option_request_uri) => {
                 self.state.get_playlists_loaded = false;
                 let handler =
                     self.link
                         .callback(move |response: FetchResponse<Paging<SimplifiedPlaylist>>| {
                             let (_, Json(data)) = response.into_parts();
                             match data {
-                                Ok(paging) => Msg::GetPlaylistsSuccess(paging.items),
+                                Ok(paging) => Msg::GetPlaylistsSuccess(paging.items, paging.next),
                                 Err(err) => Msg::GetPlaylistsError(err)
                             }
                         });
-                self.task = Some(api::get_me_playlists(handler));
+                match option_request_uri {
+                    Some(request_uri) => {
+                        self.task = Some(api::get_playlists_from_uri(&request_uri, handler));
+                    },
+                    None => {
+                        self.task = Some(api::get_me_playlists(handler));
+                    }
+                }
                 true
             }
-            Msg::GetPlaylistsSuccess(playlists) => {
-                self.state.playlists = playlists;
-                self.state.get_playlists_loaded = true;
+            Msg::GetPlaylistsSuccess(mut playlists, option_request_uri) => {
+                self.state.playlists.append(&mut playlists);
+
+                match option_request_uri {
+                    Some(request_uri) => {
+                        self.link.send_message(Msg::GetPlaylists(Some(request_uri)));
+                    },
+                    None => {
+                        self.state.get_playlists_loaded = true;
+                    }
+                }
                 true
             }
             Msg::GetPlaylistsError(error) => {

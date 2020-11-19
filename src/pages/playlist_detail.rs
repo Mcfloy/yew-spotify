@@ -1,6 +1,6 @@
 use yew::prelude::*;
 use anyhow::Error;
-use crate::types::{PlaylistFull, Track, Artist};
+use crate::types::{PlaylistFull, Track, Artist, Paging, FullTrack, PlaylistTrack};
 use yew::services::fetch::FetchTask;
 use crate::api::FetchResponse;
 use crate::api;
@@ -9,6 +9,7 @@ use crate::components::{TrackTableHeader, TrackTable, AppHeader};
 
 struct State {
     playlist: Option<PlaylistFull>,
+    tracks: Vec<Track>,
     get_playlist_error: Option<Error>,
     get_playlist_loaded: bool
 }
@@ -28,7 +29,10 @@ pub struct Props {
 pub enum Msg {
     GetPlaylist,
     GetPlaylistSuccess(PlaylistFull),
-    GetPlaylistError(Error)
+    GetPlaylistError(Error),
+    AppendTracks(String),
+    AppendTracksSuccess(Vec<Track>, Option<String>),
+    AppendTracksError(Error)
 }
 
 impl Component for PlaylistDetail {
@@ -42,6 +46,7 @@ impl Component for PlaylistDetail {
             props,
             state: State {
                 playlist: None,
+                tracks: vec![],
                 get_playlist_error: None,
                 get_playlist_loaded: false
             },
@@ -68,11 +73,59 @@ impl Component for PlaylistDetail {
                 true
             }
             Msg::GetPlaylistSuccess(playlist) => {
-                self.state.get_playlist_loaded = true;
+                self.state.tracks = playlist.tracks.items
+                    .iter()
+                    .map(|playlist_track| Track::from_playlist_track(playlist_track))
+                    .collect();
+
+                if let Some(request_uri) = playlist.tracks.next.clone() {
+                    self.link.send_message(Msg::AppendTracks(request_uri));
+                } else {
+                    self.state.get_playlist_loaded = true;
+                }
+
                 self.state.playlist = Some(playlist);
                 true
             }
             Msg::GetPlaylistError(error) => {
+                self.state.get_playlist_loaded = true;
+                self.state.get_playlist_error = Some(error);
+                true
+            }
+            Msg::AppendTracks(request_uri) => {
+                let handler = self
+                    .link
+                    .callback(move |response: FetchResponse<Paging<PlaylistTrack<FullTrack>>>| {
+                        let (_, Json(data)) = response.into_parts();
+                        match data {
+                            Ok(paging_tracks) => {
+                                let tracks = paging_tracks.items.iter()
+                                    .map(|playlist_track| Track::from_playlist_track(playlist_track))
+                                    .collect();
+                                let next_page = paging_tracks.next.clone();
+
+                                Msg::AppendTracksSuccess(tracks, next_page)
+                            },
+                            Err(err) => Msg::AppendTracksError(err),
+                        }
+                    });
+
+                self.task = Some(api::get_tracks_from_uri(&request_uri, handler));
+                true
+            }
+            Msg::AppendTracksSuccess(mut tracks, next_page) => {
+                self.state.tracks.append(&mut tracks);
+                match next_page {
+                    Some(request_uri) => {
+                        self.link.send_message(Msg::AppendTracks(request_uri));
+                    },
+                    _ => {
+                        self.state.get_playlist_loaded = true;
+                    }
+                }
+                true
+            }
+            Msg::AppendTracksError(error) => {
                 self.state.get_playlist_loaded = true;
                 self.state.get_playlist_error = Some(error);
                 true
@@ -88,14 +141,11 @@ impl Component for PlaylistDetail {
 
     fn view(&self) -> Html {
         if let Some (ref playlist) = self.state.playlist {
-            let tracks: Vec<Track> = playlist.tracks.items
-                .iter()
-                .map(|playlist_track| Track::from_playlist_track(playlist_track))
-                .collect();
+            let tracks: &Vec<Track> = &self.state.tracks;
 
-            let total_duration: u32 = playlist.tracks.items
+            let total_duration: u32 = self.state.tracks
                 .iter()
-                .map(|playlist_track| playlist_track.track.duration_ms)
+                .map(|track| track.duration_ms)
                 .sum();
 
             let converted_owner: Vec<Artist> = match &playlist.owner.display_name {
@@ -146,7 +196,7 @@ impl Component for PlaylistDetail {
                         total_duration=total_duration
                         release_date=release_date
                          />
-                    <TrackTable tracks=&tracks headers=headers />
+                    <TrackTable tracks=tracks headers=headers />
                 </>
             }
         } else if !self.state.get_playlist_loaded {

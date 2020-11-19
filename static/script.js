@@ -1,3 +1,4 @@
+// TODO: Transfer the methods to Rust
 function parse_hash(str) {
   const parts = str.substr(1).split('&');
   const map = new Map();
@@ -118,18 +119,18 @@ function redirectToAuthUrl() {
 
 function parseTimeToString(timestamp) {
   // timestamp is in ms.
-  const timestampinS = timestamp / 1000;
-  if (timestampinS > 3600) {
-    const hours = parseInt(timestampinS / 3600);
-    const timestampOfMinutesInS = timestampinS % 3600;
+  const timestampInS = timestamp / 1000;
+  if (timestampInS > 3600) {
+    const hours = parseInt(timestampInS / 3600);
+    const timestampOfMinutesInS = timestampInS % 3600;
     const minutes = parseInt(timestampOfMinutesInS / 60);
     const seconds = parseInt(timestampOfMinutesInS % 60);
     // time with hours and minutes and seconds
     return `${hours}:${minutes}:${seconds}`;
   } else {
     // time with minutes and seconds
-    const minutes = parseInt(timestampinS / 60);
-    const seconds = parseInt(timestampinS % 60);
+    const minutes = parseInt(timestampInS / 60);
+    const seconds = parseInt(timestampInS % 60);
     // time with hours and minutes and seconds
     return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
   }

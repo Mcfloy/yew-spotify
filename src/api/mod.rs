@@ -10,8 +10,10 @@ mod album_api;
 mod playlist_api;
 mod artist_api;
 mod user_api;
+mod track_api;
 
 pub use album_api::*;
 pub use playlist_api::*;
 pub use artist_api::*;
 pub use user_api::*;
+pub use track_api::*;

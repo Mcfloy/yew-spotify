@@ -92,9 +92,6 @@ impl Component for ArtistDetail {
             html! {
                 <>
                     <AppBanner artist=artist.clone() />
-                    // Top tracks
-                    // Albums
-                    // Related artists
                 </>
             }
         } else if !self.state.get_artist_loaded {
