@@ -174,6 +174,7 @@ impl TrackTable {
 
         let options_node = html! { <td></td> };
 
+        // TODO: Add a boolean for favorite if the song has been added to the liked songs.
         html! {
             <tr>
                 { play_node }

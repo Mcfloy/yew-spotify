@@ -7,6 +7,7 @@
   <script src="script.js"></script>
   <script type="module">
     import init from "./wasm.js"
+
     
     // Main method for launching the app
     (async _ => {
@@ -26,7 +27,7 @@
         }
 
         // First initialize the yew application (it removes everything from the body unfortunately)
-        await init();
+        window.wasm_accessor = await init();
         
         // Then initialize the spotify player (will add things in the body)
         const scriptNode = document.createElement('script');
@@ -50,7 +51,6 @@
       const player_cover = document.getElementById('player_cover');
       const player_song_name = document.getElementById('player_song_name');
       const player_artist = document.getElementById('player_artist');
-      const player_progression = document.getElementById('player_progression');
 
       const player = new Spotify.Player({
         name: 'Yew Spotify Player',
@@ -73,9 +73,20 @@
 
       // TODO: Can be externalized to a Rust method
       let playTimeEventHandler = async () => {
-        const player_progression = document.getElementById('player_progression');
+        const player_progression_position = document.getElementById('player_progression_position');
+        const player_slider = document.getElementById('player_slider');
+        const player_progression_lower_track = document.getElementById('player_progression_lower_track');
+
         let { position, duration } = await player.getCurrentState();
-        player_progression.innerText = parseTimeToString(position) + ' - ' + parseTimeToString(duration);
+        
+        const newText = parseTimeToString(position);
+
+        player_progression_lower_track.style.width = Math.ceil(position / duration * 700) + 'px';
+        player_slider.value = position;
+
+        if (player_progression_position.innerText != newText) {
+          player_progression_position.innerText = newText;
+        }
       };
 
       let intervalNumberInstance;
@@ -100,7 +111,13 @@
         const player_cover = document.getElementById('player_cover');
         const player_song_name = document.getElementById('player_song_name');
         const player_artist = document.getElementById('player_artist');
-        const player_progression = document.getElementById('player_progression');
+        const player_progression_position = document.getElementById('player_progression_position');
+        const player_progression_duration = document.getElementById('player_progression_duration');
+        const player_slider = document.getElementById('player_slider');
+
+        player_slider.min = 0;
+        player_slider.max = duration;
+        player_slider.value = position;
 
         console.log('Currently Playing', current_track);
         console.log('Position: ' + position + ' - Duration: ' + duration);
@@ -110,8 +127,12 @@
         player_artist.innerText = current_track.artists.map(artist => artist.name).join(', ');
         player_song_name.innerText = current_track.name;
 
-        player_progression.innerText = parseTimeToString(position) + ' - ' + parseTimeToString(duration);
+        player_progression_position.innerText = parseTimeToString(position);
+        player_progression_duration.innerText = parseTimeToString(duration);
+
         if (paused === false && !intervalNumberInstance) {
+          playTimeEventHandler();
+
           console.log('create play time event handler');
           intervalNumberInstance = setInterval(playTimeEventHandler, 200);
         } else if (paused === true && intervalNumberInstance) {

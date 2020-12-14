@@ -36,8 +36,8 @@ function clearCookies() {
   localStorage.removeItem('refresh_token');
 }
 
-const clientId = '3fb93fa750654c4b8ae3a309c343b8d3';
-const authorizationHeader = 'Basic M2ZiOTNmYTc1MDY1NGM0YjhhZTNhMzA5YzM0M2I4ZDM6OWM5MjBhOTg4ZWViNGRiNTk1YmY2ODFjZTc0YjI5NmQ=';
+const clientId = 'CLIENT_ID';
+const authorizationHeader = 'AUTHORIZATION_HEADER';
 
 const scopes = [
   'user-read-playback-state',
