@@ -7,7 +7,6 @@
   <script src="script.js"></script>
   <script type="module">
     import init from "./wasm.js"
-
     
     // Main method for launching the app
     (async _ => {
@@ -78,13 +77,16 @@
         const player_progression_lower_track = document.getElementById('player_progression_lower_track');
 
         let { position, duration } = await player.getCurrentState();
-        
+
+        if (position > duration) {
+          position = duration;
+        }
         const newText = parseTimeToString(position);
 
-        player_progression_lower_track.style.width = Math.ceil(position / duration * 700) + 'px';
+        player_progression_lower_track.style.width = Math.ceil(position / duration * 300) + 'px';
         player_slider.value = position;
 
-        if (player_progression_position.innerText != newText) {
+        if (player_progression_position.innerText !== newText) {
           player_progression_position.innerText = newText;
         }
       };
@@ -107,13 +109,14 @@
         //   antiSpamTimeStamp = Date.now();
         // }
 
-        // TODO: Can be transfered to a rust method.
+        // TODO: Can be transferred to a rust method.
         const player_cover = document.getElementById('player_cover');
         const player_song_name = document.getElementById('player_song_name');
         const player_artist = document.getElementById('player_artist');
         const player_progression_position = document.getElementById('player_progression_position');
         const player_progression_duration = document.getElementById('player_progression_duration');
         const player_slider = document.getElementById('player_slider');
+        const play_button_icon = document.querySelector('#play_button .material-icons');
 
         player_slider.min = 0;
         player_slider.max = duration;
@@ -125,10 +128,12 @@
 
         player_cover.src = current_track.album.images[1].url;
         player_artist.innerText = current_track.artists.map(artist => artist.name).join(', ');
-        player_song_name.innerText = current_track.name;
+        player_song_name.innerHTML = `<a href="/albums/${current_track.album.uri.replace('spotify:album:', '')}">${current_track.name}</a>`;
 
         player_progression_position.innerText = parseTimeToString(position);
         player_progression_duration.innerText = parseTimeToString(duration);
+
+        play_button_icon.innerText = paused ? 'play_arrow' : 'pause';
 
         if (paused === false && !intervalNumberInstance) {
           playTimeEventHandler();
@@ -171,6 +176,28 @@
         window.play = (spotify_uri) => {
           playMethod({ playerInstance: player, spotify_uri });
         };
+
+        const volumeSlider = document.getElementById("player_volume");
+        player.getVolume().then(volume => volumeSlider.value = volume)
+        let volumeSliderCb = null;
+        volumeSlider.addEventListener("change", event => {
+          if (volumeSliderCb !== null) {
+            clearTimeout(volumeSliderCb);
+          }
+          volumeSliderCb = setTimeout(() => {
+            player.setVolume(event.target.value)
+          }, 200);
+        });
+
+        const playButton = document.getElementById('play_button');
+        playButton.addEventListener('click', event => {
+          const buttonState = playButton.querySelector('.material-icons').innerText;
+          if (buttonState === 'pause') {
+            player.pause();
+          } else {
+            player.resume();
+          }
+        })
 
         // TODO: Create the "Queue a song to the list" method.
       });

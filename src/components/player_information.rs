@@ -34,7 +34,7 @@ impl Component for PlayerInformation {
                     </button>
                     <button id="play_button">
                         <span class="material-icons">
-                            {"play_arrow"}
+                            {"pause"}
                         </span>
                     </button>
                     <button id="next_button">
@@ -49,7 +49,7 @@ impl Component for PlayerInformation {
                     <div id="player_progression_lower_track"></div>
                     <span id="player_progression_duration"></span>
                 </div>
-                <input type="range" id="player_volume" min="0" max="100" step="1" value="50" />
+                <input type="range" id="player_volume" min="0" max="1" step="0.01" value="0.5" />
             </div>
         }
     }

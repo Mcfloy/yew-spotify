@@ -36,8 +36,8 @@ function clearCookies() {
   localStorage.removeItem('refresh_token');
 }
 
-const clientId = 'CLIENT_ID';
-const authorizationHeader = 'AUTHORIZATION_HEADER';
+const clientId = '';
+const authorizationHeader = 'Basic ';
 
 const scopes = [
   'user-read-playback-state',
