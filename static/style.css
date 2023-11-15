@@ -99,6 +99,10 @@ main {
     font-size: 14px;
 }
 
+#player_song_name a {
+    text-wrap: none;
+}
+
 #player_commands {
     position: absolute;
     left: 0;

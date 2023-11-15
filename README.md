@@ -3,7 +3,18 @@ Spotify player with Yew implementation (using JS Spotify Web Playback SDK)
 
 ![](preview.jpg)
 
-_This is not the best preview but as a POC it works_
+You can do the following things:
+- Play/Pause
+- Change volume
+- View a playlist
+- View an album
+- View an artist
+- List your own playlists
+
+List of things that are not implemented (yet):
+- No search function
+- No previous or next button
+- No usage of the queue
 
 ## Installation guide
 
@@ -17,12 +28,12 @@ miniserve ./static --index index.html
 ```
 
 ## Dev note
-So actually I managed to create a Frankenstein of Rust and Javascript using the Spotify Web Playback SDK.
+So actually, I managed to create a Frankenstein of Rust and Javascript using the Spotify Web Playback SDK.
 
-For now the source code is a mess (but it works), and I'll do the following things:
-- Transfer the token management to Rust in wasm, if not possible rewrite using es6 class paradigm
+For now, the source code is a mess (but it works), and I'll do the following things:
+- Transfer the token management to Rust in wasm, if not possible then rewrite using es6 class paradigm
 - Expose the Spotify Player to wasm so that the Yew application can call it
-- Use properly Yew for displaying the information.
+- Properly use Yew for displaying the information.
 
 
 ## Contributing
